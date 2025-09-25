@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodClub - Food Delivery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Student Info */
+        .student-info {
+            background: linear-gradient(135deg, #333, #111);
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            border-bottom: 2px solid #dc2626;
+        }
+
+        .student-details {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .student-item {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .student-name, .student-id {
+            color: #dc2626;
+        }
+
+        /* Header */
+        .header {
+            background: #111;
+            border-bottom: 3px solid #dc2626;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #dc2626;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #b91c1c;
+        }
+
+        .admin-btn {
+            background: #333;
+        }
+
+        .admin-btn:hover {
+            background: #444;
+        }
+
+        .cart-btn {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #fff;
+            color: #dc2626;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Views */
+        .customer-view {
+            display: block;
+        }
+
+        .admin-view {
+            display: none;
+        }
+
+        .admin-view.active {
+            display: block;
+        }
+
+        .customer-view.hidden {
+            display: none;
+        }
+
+        /* Main Content */
+        .content-section {
+            background: #111;
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #dc2626;
+            margin-bottom: 30px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 0;
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* Restaurant Grid */
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .restaurant-card {
+            background: #222;
+            border: 2px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .restaurant-card:hover {
+            border-color: #dc2626;
+            transform: translateY(-5px);
+        }
+
+        .restaurant-image {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .restaurant-info {
+            padding: 20px;
+        }
+
+        .restaurant-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .restaurant-desc {
+            color: #ccc;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .restaurant-rating {
+            color: #dc2626;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .view-menu-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .view-menu-btn:hover {
+            background: #b91c1c;
+        }
+
+        /* Menu Items */
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .menu-item {
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .menu-item:hover {
+            border-color: #dc2626;
+        }
+
+        .item-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(45deg, #dc2626, #991b1b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .item-info {
+            padding: 15px;
+        }
+
+        .item-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .item-desc {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .item-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #dc2626;
+            margin-bottom: 10px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .qty-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .qty-btn:hover {
+            background: #b91c1c;
+        }
+
+        .qty-display {
+            background: #333;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            border: 1px solid #dc2626;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .add-cart-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .add-cart-btn:hover {
+            background: #b91c1c;
+        }
+
+        /* Back Button */
+        .back-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background: #444;
+        }
+
+        /* Cart Modal */
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+
+        .cart-modal.show {
+            display: flex;
+        }
+
+        .cart-content {
+            background: #111;
+            border: 2px solid #dc2626;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #dc2626;
+        }
+
+        .close-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-restaurant {
+            color: #dc2626;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .remove-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .cart-total {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #dc2626;
+        }
+
+        .checkout-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .checkout-btn:hover {
+            background: #b91c1c;
+        }
+
+        .checkout-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        /* Payment Options */
+        .payment-options {
+            margin: 20px 0;
+        }
+
+        .payment-title {
+            color: #dc2626;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .payment-option {
+            background: #222;
+            border: 2px solid #333;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-option:hover,
+        .payment-option.selected {
+            border-color: #dc2626;
+            background: #333;
+        }
+
+        .payment-option input {
+            margin-right: 10px;
+        }
+
+        /* Admin Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #222;
+            border: 2px solid #dc2626;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #dc2626;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #ccc;
+            font-size: 1rem;
+        }
+
+        /* Orders */
+        .order-card {
+            background: #222;
+            border: 1px solid #333;
+            border-left: 4px solid #dc2626;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #dc2626;
+        }
+
+        .order-time {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .order-items {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .order-items li {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+            color: #ccc;
+        }
+
+        .order-total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #dc2626;
+            text-align: right;
+        }
+
+        .order-payment {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        /* Success Message */
+        .success-msg {
+            background: linear-gradient(45deg, #dc2626, #991b1b);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .success-msg.show {
+            display: block;
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .student-details {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .restaurant-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Student Info -->
+    <div class="student-info">
+        <div class="container">
+            <div class="student-details">
+                <div class="student-item">
+                    Student: <span class="student-name">Moontasir bin Shahed</span>
+                </div>
+                <div class="student-item">
+                    Student ID: <span class="student-id">K232034</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">FoodClub</div>
+                <div class="nav-buttons">
+                    <button class="btn" onclick="showCustomerView()">Customer</button>
+                    <button class="btn admin-btn" onclick="showAdminView()">Admin</button>
+                    <button class="btn cart-btn" onclick="toggleCart()">
+                        Cart <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Customer View -->
+    <div id="customerView" class="customer-view">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>Order Food from Your Favorite Restaurants</h1>
+                <p>Fast delivery, great food, amazing experience</p>
+            </div>
+        </section>
+
+        <!-- Restaurant List -->
+        <section class="content-section" id="restaurantList">
+            <div class="container">
+                <h2 class="section-title">Popular Restaurants</h2>
+                <div class="restaurant-grid">
+                    <div class="restaurant-card" onclick="showMenu('pizza-hut')">
+                        <div class="restaurant-image">🍕</div>
+                        <div class="restaurant-info">
+                            <div class="restaurant-name">Pizza Hut</div>
+                            <div class="restaurant-desc">Delicious pizzas and Italian food</div>
+                            <div class="restaurant-rating">⭐ 4.5 (1000+ reviews)</div>
+                            <button class="view-menu-btn">View Menu</button>
+                        </div>
+                    </div>
+
+                    <div class="restaurant-card" onclick="showMenu('momos-hub')">
+                        <div class="restaurant-image">🥟</div>
+                        <div class="restaurant-info">
+                            <div class="restaurant-name">Momos Hub</div>
+                            <div class="restaurant-desc">Authentic momos and Tibetan cuisine</div>
+                            <div class="restaurant-rating">⭐ 4.3 (800+ reviews)</div>
+                            <button class="view-menu-btn">View Menu</button>
+                        </div>
+                    </div>
+
+                    <div class="restaurant-card" onclick="showMenu('yumm-curry')">
+                        <div class="restaurant-image">🍛</div>
+                        <div class="restaurant-info">
+                            <div class="restaurant-name">Yumm Curry</div>
+                            <div class="restaurant-desc">Spicy Indian curries and rice</div>
+                            <div class="restaurant-rating">⭐ 4.6 (1200+ reviews)</div>
+                            <button class="view-menu-btn">View Menu</button>
+                        </div>
+                    </div>
+
+                    <div class="restaurant-card" onclick="showMenu('dominos')">
+                        <div class="restaurant-image">🍕</div>
+                        <div class="restaurant-info">
+                            <div class="restaurant-name">Dominos</div>
+                            <div class="restaurant-desc">30-minute delivery pizza</div>
+                            <div class="restaurant-rating">⭐ 4.2 (900+ reviews)</div>
+                            <button class="view-menu-btn">View Menu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section -->
+        <section class="content-section hidden" id="menuSection">
+            <div class="container">
+                <button class="back-btn" onclick="showRestaurants()">← Back to Restaurants</button>
+                <h2 class="section-title" id="menuTitle">Menu</h2>
+                <div class="menu-items" id="menuItems"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Admin View -->
+    <div id="adminView" class="admin-view">
+        <section class="content-section">
+            <div class="container">
+                <h2 class="section-title">Admin Dashboard</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalOrders">0</div>
+                        <div class="stat-label">Total Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalRevenue">$0</div>
+                        <div class="stat-label">Total Revenue</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCustomers">0</div>
+                        <div class="stat-label">Customers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avgOrder">$0</div>
+                        <div class="stat-label">Avg Order</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <h2 class="section-title">Recent Orders</h2>
+                <div id="ordersList">
+                    <div style="text-align: center; color: #ccc; padding: 40px;">
+                        <h3>No orders yet</h3>
+                        <p>Orders will appear here when customers place them</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2>Your Cart</h2>
+                <button class="close-btn" onclick="toggleCart()">×</button>
+            </div>
+            <div id="cartItems">
+                <div style="text-align: center; color: #ccc; padding: 20px;">
+                    Your cart is empty
+                </div>
+            </div>
+            <div class="payment-options">
+                <div class="payment-title">Select Payment Method</div>
+                <div class="payment-option selected" onclick="selectPayment('cod')">
+                    <input type="radio" name="payment" value="cod" id="cod" checked>
+                    <label for="cod">💵 Cash on Delivery</label>
+                </div>
+                <div class="payment-option" onclick="selectPayment('apple')">
+                    <input type="radio" name="payment" value="apple" id="apple">
+                    <label for="apple">💳 Apple Pay</label>
+                </div>
+                <div class="payment-option" onclick="selectPayment('google')">
+                    <input type="radio" name="payment" value="google" id="google">
+                    <label for="google">💳 Google Pay</label>
+                </div>
+            </div>
+            <div class="cart-total">
+                <h3>Total: $<span id="cartTotal">0.00</span></h3>
+                <button class="checkout-btn" onclick="checkout()">Place Order</button>
+            </div>
+            <div class="success-msg" id="orderSuccess">
+                <h3>Order placed successfully!</h3>
+                <p>Your food will be delivered soon</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        var cart = [];
+        var quantities = {};
+        var orders = [];
+        var orderCounter = 1;
+        var selectedPayment = 'cod';
+        var currentRestaurant = '';
+
+        // Restaurant menus
+        var menus = {
+            'pizza-hut': [
+                {id: 'ph1', name: 'Margherita Pizza', price: 12.99, desc: 'Fresh mozzarella, tomatoes, basil'},
+                {id: 'ph2', name: 'Pepperoni Pizza', price: 15.99, desc: 'Pepperoni, mozzarella, tomato sauce'},
+                {id: 'ph3', name: 'Chicken Supreme', price: 18.99, desc: 'Chicken, peppers, onions, mushrooms'},
+                {id: 'ph4', name: 'Garlic Bread', price: 6.99, desc: 'Fresh bread with garlic butter'}
+            ],
+            'momos-hub': [
+                {id: 'mh1', name: 'Veg Momos', price: 8.99, desc: 'Steamed dumplings with vegetables'},
+                {id: 'mh2', name: 'Chicken Momos', price: 11.99, desc: 'Steamed dumplings with chicken'},
+                {id: 'mh3', name: 'Fried Momos', price: 10.99, desc: 'Crispy fried vegetable dumplings'},
+                {id: 'mh4', name: 'Chili Momos', price: 12.99, desc: 'Spicy momos with chili sauce'}
+            ],
+            'yumm-curry': [
+                {id: 'yc1', name: 'Butter Chicken', price: 14.99, desc: 'Creamy tomato curry with chicken'},
+                {id: 'yc2', name: 'Dal Tadka', price: 9.99, desc: 'Yellow lentils with spices'},
+                {id: 'yc3', name: 'Biryani', price: 16.99, desc: 'Fragrant rice with chicken and spices'},
+                {id: 'yc4', name: 'Naan Bread', price: 3.99, desc: 'Fresh Indian bread'}
+            ],
+            'dominos': [
+                {id: 'd1', name: 'Classic Margherita', price: 11.99, desc: 'Cheese and tomato pizza'},
+                {id: 'd2', name: 'Veggie Supreme', price: 16.99, desc: 'Mixed vegetables and cheese'},
+                {id: 'd3', name: 'Meat Lovers', price: 19.99, desc: 'Pepperoni, sausage, ham, bacon'},
+                {id: 'd4', name: 'Garlic Bread Sticks', price: 5.99, desc: 'Breadsticks with garlic seasoning'}
+            ]
+        };
+
+        var restaurantNames = {
+            'pizza-hut': 'Pizza Hut',
+            'momos-hub': 'Momos Hub',
+            'yumm-curry': 'Yumm Curry',
+            'dominos': 'Dominos'
+        };
+
+        // Initialize quantities
+        Object.values(menus).forEach(menu => {
+            menu.forEach(item => {
+                quantities[item.id] = 1;
+            });
+        });
+
+        // View functions
+        function showCustomerView() {
+            document.getElementById('customerView').style.display = 'block';
+            document.getElementById('adminView').style.display = 'none';
+            document.getElementById('customerView').classList.remove('hidden');
+            document.getElementById('adminView').classList.remove('active');
+        }
+
+        function showAdminView() {
+            document.getElementById('customerView').style.display = 'none';
+            document.getElementById('adminView').style.display = 'block';
+            document.getElementById('customerView').classList.add('hidden');
+            document.getElementById('adminView').classList.add('active');
+            updateAdminStats();
+        }
+
+        function showRestaurants() {
+            document.getElementById('restaurantList').classList.remove('hidden');
+            document.getElementById('menuSection').classList.add('hidden');
+        }
+
+        function showMenu(restaurantId) {
+            currentRestaurant = restaurantId;
+            document.getElementById('restaurantList').classList.add('hidden');
+            document.getElementById('menuSection').classList.remove('hidden');
+            document.getElementById('menuTitle').textContent = restaurantNames[restaurantId] + ' Menu';
+            
+            var menuHtml = '';
+            menus[restaurantId].forEach(item => {
+                menuHtml += `
+                    <div class="menu-item">
+                        <div class="item-image">🍽️</div>
+                        <div class="item-info">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-desc">${item.desc}</div>
+                            <div class="item-price">$${item.price}</div>
+                            <div class="quantity-controls">
+                                <button class="qty-btn" onclick="changeQuantity('${item.id}', -1)">-</button>
+                                <span class="qty-display" id="qty-${item.id}">${quantities[item.id]}</span>
+                                <button class="qty-btn" onclick="changeQuantity('${item.id}', 1)">+</button>
+                            </div>
+                            <button class="add-cart-btn" onclick="addToCart('${item.id}', '${item.name}', ${item.price}, '${restaurantId}')">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('menuItems').innerHTML = menuHtml;
+        }
+
+        function changeQuantity(itemId, change) {
+            var newQty = quantities[itemId] + change;
+            if (newQty >= 1) {
+                quantities[itemId] = newQty;
+                document.getElementById('qty-' + itemId).textContent = newQty;
+            }
+        }
+
+        function addToCart(itemId, itemName, itemPrice, restaurantId) {
+            var qty = quantities[itemId];
+            var existingItem = cart.find(item => item.id === itemId);
+            
+            if (existingItem) {
+                existingItem.quantity += qty;
+            } else {
+                cart.push({
+                    id: itemId,
+                    name: itemName,
+                    price: itemPrice,
+                    quantity: qty,
+                    restaurant: restaurantNames[restaurantId]
+                });
+            }
+            
+            updateCartDisplay();
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(item => item.id !== itemId);
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            var cartCount = document.getElementById('cartCount');
+            var cartItems = document.getElementById('cartItems');
+            var cartTotal = document.getElementById('cartTotal');
+            
+            var totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            var totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            cartCount.textContent = totalItems;
+            cartTotal.textContent = totalPrice.toFixed(2);
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div style="text-align: center; color: #ccc; padding: 20px;">Your cart is empty</div>';
+            } else {
+                var itemsHtml = '';
+                cart.forEach(item => {
+                    itemsHtml += `
+                        <div class="cart-item">
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-restaurant">${item.restaurant}</div>
+                                <div class="cart-item-price">$${item.price} x ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}</div>
+                            </div>
+                            <button class="remove-btn" onclick="removeFromCart('${item.id}')">Remove</button>
+                        </div>
+                    `;
+                });
+                cartItems.innerHTML = itemsHtml;
+            }
+        }
+
+        function toggleCart() {
+            var modal = document.getElementById('cartModal');
+            var isVisible = modal.classList.contains('show');
+            
+            if (isVisible) {
+                modal.classList.remove('show');
+            } else {
+                modal.classList.add('show');
+                updateCartDisplay();
+            }
+        }
+
+        function selectPayment(paymentType) {
+            selectedPayment = paymentType;
+            
+            // Remove selected class from all options
+            var options = document.querySelectorAll('.payment-option');
+            options.forEach(option => option.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            var clickedOption = document.querySelector('.payment-option input[value="' + paymentType + '"]').closest('.payment-option');
+            clickedOption.classList.add('selected');
+            
+            // Update radio button
+            document.getElementById(paymentType).checked = true;
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            var total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            var paymentMethod = selectedPayment === 'cod' ? 'Cash on Delivery' : 
+                              selectedPayment === 'apple' ? 'Apple Pay' : 'Google Pay';
+
+            var order = {
+                id: orderCounter++,
+                items: [...cart],
+                total: total,
+                payment: paymentMethod,
+                timestamp: new Date()
+            };
+
+            orders.push(order);
+            
+            // Show success message
+            document.getElementById('orderSuccess').classList.add('show');
+            
+            // Clear cart after 2 seconds and hide success message
+            setTimeout(() => {
+                cart = [];
+                updateCartDisplay();
+                document.getElementById('orderSuccess').classList.remove('show');
+                toggleCart();
+            }, 2000);
+        }
+
+        function updateAdminStats() {
+            var totalOrders = orders.length;
+            var totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+            var totalCustomers = totalOrders; // Simplified - each order = 1 customer
+            var avgOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toFixed(2);
+            document.getElementById('totalCustomers').textContent = totalCustomers;
+            document.getElementById('avgOrder').textContent = '$' + avgOrder.toFixed(2);
+
+            // Update orders list
+            var ordersList = document.getElementById('ordersList');
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = `
+                    <div style="text-align: center; color: #ccc; padding: 40px;">
+                        <h3>No orders yet</h3>
+                        <p>Orders will appear here when customers place them</p>
+                    </div>
+                `;
+            } else {
+                var ordersHtml = '';
+                var recentOrders = [...orders].reverse().slice(0, 10);
+                
+                recentOrders.forEach(order => {
+                    var itemsList = order.items.map(item => 
+                        `<li><span>${item.name} (${item.restaurant})</span><span>${item.quantity} x $${item.price}</span></li>`
+                    ).join('');
+                    
+                    ordersHtml += `
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div class="order-id">Order #${order.id}</div>
+                                <div class="order-time">${order.timestamp.toLocaleString()}</div>
+                            </div>
+                            <ul class="order-items">
+                                ${itemsList}
+                            </ul>
+                            <div class="order-total">Total: $${order.total.toFixed(2)}</div>
+                            <div class="order-payment">Payment: ${order.payment}</div>
+                        </div>
+                    `;
+                });
+                
+                ordersList.innerHTML = ordersHtml;
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            var modal = document.getElementById('cartModal');
+            if (event.target === modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            showCustomerView();
+            updateCartDisplay();
+        });
+    </script>
+</body>
+</html>
